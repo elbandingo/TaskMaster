@@ -45,7 +45,62 @@ var saveTasks = function() {
   localStorage.setItem("tasks", JSON.stringify(tasks));
 };
 
+//ADD FUNCTIONALITY FOR EDITING THE CONTENTS AFTER TASK IS CLICKED
+//WHEN THE P element is selected, replace the area with a textarea element so that they cna edit the contents
+$(".list-group").on("click", "p", function(){
+  var text = $(this).text().trim(); //setting a variable for text to select THIS(left element)
+  var textInput = $("<textarea>").addClass("form-control").val(text); // using no <> means LOOK FOR AN ELEMENT, when using <>, its saying CREATE an element
+  $(this).replaceWith(textInput); //this is replacing the P element, with the text area element created above when clicked
+  textInput.trigger("focus");
+});
 
+//after the editing is done in the above code, convert it back to a P element (blur means once we click away, or dorp its focus)
+$(".list-group").on("blur", "textarea", function(){
+  // get the textarea's current value/text
+  var text = $(this).val().trim();
+
+  //get the parent UL id attribute
+  var status = $(this).closest(".list-group").attr("id").replace("list-", "");
+  
+  //get the task's position in the list of other LI elements
+  var index = $(this).closest(".list-group-item").index();
+
+  //update the tasks object with the values captured by the edit
+  tasks[status][index].text = text;
+  saveTasks();
+
+  //recreate the P element
+  var taskP = $("<p>").addClass("m-1").text(text);
+
+  // replace the textarea with P element
+  $(this).replaceWith(taskP);
+});
+
+//ADD FUNCTIONALITY FOR EDITING THE DATE AFTER ITS CLICKED
+//Due date has been clicked, and convert the form to an input
+$(".list-group").on("click","span", function(){
+  var date = $(this).text().trim();
+  //create a new input element after being clicked, give it the CSS class
+  var dateInput = $("<input>").attr("type", "text").addClass("form-control").val(date);
+  $(this).replaceWith(dateInput);
+  dateInput.trigger("focus");
+});
+  //after editing is complete, revert it back to a SPAN element with the contents
+  $(".list-group").on("blur", "input", function(){
+    //get the input boxes current value
+    var date = $(this).val().trim();
+    //get the parent UL ID Attribute
+    var status = $(this).closest(".list-group").attr("id").replace("list-", "");
+    //get the taks position in the list of other LI elements
+    var index = $(this).closest(".list-group-item").index();
+    //update the tasks objects with the values captured by the edit and save it
+    tasks[status][index].date = date;
+    saveTasks();
+    //recreate the span element
+    var dateSpan = $("<span>").addClass("badge badge-primary badge-pill").text(date);
+    //replace the input, with the span
+    $(this).replaceWith(dateSpan);
+  });
 
 
 // modal was triggered
