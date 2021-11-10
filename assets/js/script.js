@@ -146,6 +146,45 @@ $("#remove-tasks").on("click", function() {
   saveTasks();
 });
 
+
+//making the task cards draggable
+$(".card .list-group").sortable({
+  connectWith: $(".card .list-group"), //makes them "snap" in with whatever location has a .card and .list-group class
+  scroll: false,
+  tolerance: "pointer",
+  helper: "clone",
+  activate: function(event){
+  },
+  deactivate: function(event){
+  },
+  over: function(event){
+  },
+  out: function(event) {
+  },
+  update: function(event) {
+  //declare empty array to be updated
+    var tempArray = [];
+    //loop through each child of the card and get the details of each P and SPAN element
+    $(this).children().each(function(){
+      var text = $(this).find("p").text().trim();
+      var date = $(this).find("span").text().trim();
+      //push the values in date and and text variables, to the text and date kay pairs in the object
+      tempArray.push({
+        text: text,
+        date: date
+      });
+    });
+    //replce the child attributes contents to the new card its been dragged into
+    var arrName = $(this).attr("id").replace("list-", "");
+    //update the main object "tasks" at this index to equal the value of the tempArray we just made and used
+    tasks[arrName] = tempArray;
+    //save the updated values to localStorage
+    saveTasks();
+  }
+});
+
+
+
 // load tasks for the first time
 loadTasks();
 
