@@ -183,6 +183,22 @@ $(".card .list-group").sortable({
   }
 });
 
+//making the trash droppable
+$("#trash").droppable({
+  accept: ".card .list-group-item", //telling the system what classes of items will be accepted when dropped on
+  tolerance: "touch",
+  drop: function(event, ui){
+    console.log("drop");
+    ui.draggable.remove();
+  },
+  over: function(event, ui){
+    console.log("over");
+  },
+  out: function(event, ui){
+    console.log("out");
+  }
+});
+
 
 
 // load tasks for the first time
